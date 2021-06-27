@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +23,10 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'orderID' => rand(111111,999999).date('ymdhmi'),
+            'mobile' => $this->faker->phoneNumber,
+            'address' => $this->faker->address
         ];
     }
 }

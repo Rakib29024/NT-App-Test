@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Order;
+use App\Models\Stock;
 use App\Models\OrderProduct;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +24,11 @@ class OrderProductFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'order_id' => Order::factory(),
+            'stock_id' => Stock::factory(),
+            'quantity' => rand(10,80),
+            'totalProductPrice' => rand(1000,5000),
+            'deliveryCost' => $this->faker->randomElement([60,100])
         ];
     }
 }

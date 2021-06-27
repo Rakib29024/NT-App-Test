@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7759431e303e2d722a264a8a991a9e84",
+    "content-hash": "91537315a17788db50a8611714fe239e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2100,6 +2100,50 @@
                 "source": "https://github.com/bobthecow/psysh/tree/v0.10.8"
             },
             "time": "2021-04-10T16:23:39+00:00"
+        },
+        {
+            "name": "rakib29024/laravel-repository-pattern",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Rakib29024/repository-pattern-package.git",
+                "reference": "e72e52dc4f64ef33052288ed1b120e6c5075a62e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Rakib29024/repository-pattern-package/zipball/e72e52dc4f64ef33052288ed1b120e6c5075a62e",
+                "reference": "e72e52dc4f64ef33052288ed1b120e6c5075a62e",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Rakib29024\\Repository\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Md Rakib Hassan",
+                    "email": "rakib29024@gmail.com"
+                }
+            ],
+            "description": "This package is developed to reduce code & secure you attributes & methods with repository pattern system",
+            "keywords": [
+                "cli",
+                "interface",
+                "pattern",
+                "repository"
+            ],
+            "support": {
+                "issues": "https://github.com/Rakib29024/repository-pattern-package/issues",
+                "source": "https://github.com/Rakib29024/repository-pattern-package/tree/master"
+            },
+            "time": "2021-06-03T07:19:42+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -7333,7 +7377,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "rakib29024/laravel-repository-pattern": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

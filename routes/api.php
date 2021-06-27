@@ -19,7 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1','namespace'=>'API'], function () {
-    
+
     Route::apiResource('product', 'ProductNameAPIController');
     Route::apiResource('stock', 'StockAPIController');
+    Route::apiResource('order', 'OrderAPIController');
 });

@@ -29,7 +29,7 @@ class InsertRequest extends FormRequest
             'mobile'=>'required|max:20',
             'address'=>'required|max:255',
 
-            'order_id'=>'nullable|numeric',
+            'order_id*'=>'nullable|numeric',
             'quantity*'=>'required|numeric',
             'stock_id*'=>'required|numeric',
             'totalProductPrice'=>'nullable',

@@ -39,6 +39,7 @@ class OrderAPIController extends Controller
             $productInfo=[];
             for ($i=0;0<count($request->order_id);$i++) {
                 $stock=Stock::findOrFail($request->stock_id[$i]);
+                $data['productName']=$stock->product_name->name;
                 if($stock->boxQuantity<$request->stock_id[$i]){
                     continue;
                 }

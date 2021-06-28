@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OfferOrder extends Model
+class PreOrder extends Model
 {
     use HasFactory;
-    protected $fillable=['product_qty_min','total_product_price_min','expiry_date','discount'];
+    protected $fillable=['user_id','preOrderCode','status','expiry_date'];
 }

@@ -20,6 +20,7 @@ class CreateOrdersTable extends Migration
             $table->string('mobile');
             $table->string('address');
             $table->string('status')->default('pending');
+            $table->boolean('preOrder')->default(false);
             $table->timestamps();
         });
     }

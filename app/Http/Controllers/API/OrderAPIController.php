@@ -9,9 +9,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\InsertRequest;
+use App\Repositories\Order\OrderRepositoryInterface;
 
 class OrderAPIController extends Controller
 {
+    private $Repository;
+    public function __construct(OrderRepositoryInterface $OrderRepositoryInterface) {
+        $this->Repository = $OrderRepositoryInterface;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,29 +36,10 @@ class OrderAPIController extends Controller
      */
     public function store(InsertRequest $request)
     {
-        $order_data = $request->except('_token','_method','files','order_id','quantity','stock_id');
+
         DB::beginTransaction();
         try {
-            $order=Order::Create($order_data);
-            $deliveryCost=(strpos($request->address, '^(D|d)+haka'))?60:100;
-            $invoice['orderInfo']=$order;
-            $productInfo=[];
-            for ($i=0;0<count($request->order_id);$i++) {
-                $stock=Stock::findOrFail($request->stock_id[$i]);
-                $data['productName']=$stock->product_name->name;
-                if($stock->boxQuantity<$request->stock_id[$i]){
-                    continue;
-                }
-                $data['order_id']=$order->id;
-                $data['stock_id']=$request->stock_id[$i];
-                $data['quantity']=$request->quantity[$i];
-                $data['totalProductPrice']=($request->quantity[$i])*($stock->pricePerBox);
-                $data['deliveryCost']=$deliveryCost;
-                $productInfo[]=$data;
-                $order_product=OrderProduct::Create($data);
-            }
-            $invoice['orderProducts']=$productInfo;
-
+            $invoice=$this->Repository->create($request);
             return response()->json(['message'=>'Thanks for ordering','invoice'=>$invoice]);
             DB::commit();
         } catch (\Throwable $th) {

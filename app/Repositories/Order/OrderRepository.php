@@ -4,16 +4,19 @@ namespace App\Repositories\Order;
 use App\Models\Order;
 use App\Models\Stock;
 use App\Models\OrderProduct;
-use App\Repositories\OfferOrder\OfferOrderRepositoryInterface;
 use App\Repositories\Order\OrderRepositoryInterface;
+use App\Repositories\PreOrder\PreOrderRepositoryInterface;
+use App\Repositories\OfferOrder\OfferOrderRepositoryInterface;
 
 Class OrderRepository implements OrderRepositoryInterface
 {
-    public $OrderRepository;
+    public $Order,$OfferOrderRepositoryInterface,$PreOrderRepositoryInterface;
 
-    public function __construct(Order $Order) {
+    public function __construct(Order $Order,OfferOrderRepositoryInterface $OfferOrderRepositoryInterface,PreOrderRepositoryInterface $PreOrderRepositoryInterface) {
         //parent::__construct($Order);
         $this->Order = $Order;
+        $this->OfferOrderRepositoryInterface = $OfferOrderRepositoryInterface;
+        $this->PreOrderRepositoryInterface = $PreOrderRepositoryInterface;
     }
     public function pendingOrders(){
         return $this->Order->where('status','pending')->select($this->Order->dataFormat())->get();
@@ -28,19 +31,36 @@ Class OrderRepository implements OrderRepositoryInterface
         $invoice['orderInfo']=$order;
         $productInfo=[];
         for ($i=0;$i<count($request->stock_id);$i++) {
+
             $stock=Stock::findOrFail($request->stock_id[$i]);
             $data['productName']=$stock->product_name->name;
             if($stock->boxQuantity<$request->stock_id[$i]){
-                continue;
+                $preOrderCode=$this->PreOrderRepositoryInterface->preOrderTokenCheck($request->preOrderCode);
+                if(!$preOrderCode){
+                    continue;
+                }
             }
+            $data['preOrder']=$preOrderCode;
             $data['order_id']=$order->id;
             $data['stock_id']=$request->stock_id[$i];
             $data['quantity']=$request->quantity[$i];
-            $data['totalProductPrice']=($request->quantity[$i])*($stock->pricePerBox);
+            $data['discount']=0;
+            $totalProductAmount=($request->quantity[$i])*($stock->pricePerBox);
+            $discount=$this->OfferOrderRepositoryInterface->offerDiscount($request->quantity[$i],$totalProductAmount);
+            $data['discount']=$discount;
+            if($discount){
+                $totalProductAmount=$totalProductAmount-(($discount*$totalProductAmount)/100);
+            }else{
+                $data['preOrderToken']=$this->PreOrderRepositoryInterface->createPreOrder();
+            }
+            $data['totalProductPrice']=$totalProductAmount;
             $data['deliveryCost']=$deliveryCost;
             $productInfo[]=$data;
             $order_product=OrderProduct::Create($data);
-            $this->stockInventoryUpdate($order_product->stock_id,$order_product->quantity,false);
+
+            if(!$preOrderCode){
+                $this->stockInventoryUpdate($order_product->stock_id,$order_product->quantity,false);
+            }
         }
         $invoice['orderProducts']=$productInfo;
         return $invoice;

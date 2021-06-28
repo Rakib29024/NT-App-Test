@@ -20,6 +20,7 @@ class CreateOrderProductsTable extends Migration
             $table->integer('quantity');
             $table->integer('totalProductPrice');
             $table->integer('deliveryCost');
+            $table->integer('discount')->default(0);
             $table->timestamps();
         });
     }

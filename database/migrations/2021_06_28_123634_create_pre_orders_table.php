@@ -17,7 +17,7 @@ class CreatePreOrdersTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('preOrderCode');
-            $table->string('status');
+            $table->string('status')->default('active');
             $table->date('expiry_date');
             $table->timestamps();
         });

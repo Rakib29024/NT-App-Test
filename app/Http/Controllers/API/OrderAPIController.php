@@ -25,7 +25,8 @@ class OrderAPIController extends Controller
      */
     public function index()
     {
-        //
+        $pendingOrders=$this->Repository->pendingOrders();
+        return response()->json(['pendingOrders'=>$pendingOrders]);
     }
 
     /**

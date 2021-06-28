@@ -14,12 +14,15 @@ Class OrderRepository implements OrderRepositoryInterface
         //parent::__construct($Order);
         $this->Order = $Order;
     }
+    public function pendingOrders(){
+        return $this->Order->where('status','pending')->select($this->Order->dataFormat())->get();
+    }
 
     public function create($request)
     {
         $order_data = $request->except('_token','_method','files','order_id','quantity','stock_id');
         $order_data['orderID']=rand(111111,9999999).date('ymdhmi');
-        $order=$this->Order->Create($order_data);
+        $order=Order::Create($order_data);
         $deliveryCost=preg_match("/(D|d)haka/",$request->address)?60:100;
         $invoice['orderInfo']=$order;
         $productInfo=[];

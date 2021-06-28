@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\InsertRequest;
+use App\Http\Requests\Order\UpdateRequest;
 use App\Repositories\Order\OrderRepositoryInterface;
 
 class OrderAPIController extends Controller
@@ -67,9 +68,17 @@ class OrderAPIController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, Order $order)
     {
-        //
+        $order_data['status'] = $request->status;
+        $order_data['mobile'] = $request->mobile;
+        $order_data['address'] = $request->address;
+        try {
+            $newOrder=$order->update($order_data);
+            return response()->json(['status'=>200,'message'=>"Order updated"]);
+        } catch (\Throwable $th) {
+            return response()->json(['status'=>500,'message'=>'Something went wrong']);
+        }
     }
 
     /**

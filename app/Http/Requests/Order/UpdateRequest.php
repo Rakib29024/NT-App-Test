@@ -13,7 +13,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user_id'=>"nullable",
+            'orderID'=>"nullable",
+            'mobile'=>"nullable",
+            'address'=>"nullable",
+            'status'=>"required|max:20"
         ];
     }
 }

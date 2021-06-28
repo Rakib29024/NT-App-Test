@@ -39,10 +39,32 @@ Class OrderRepository implements OrderRepositoryInterface
             $data['deliveryCost']=$deliveryCost;
             $productInfo[]=$data;
             $order_product=OrderProduct::Create($data);
+            $this->stockInventoryUpdate($order_product->stock_id,$order_product->quantity,false);
         }
         $invoice['orderProducts']=$productInfo;
         return $invoice;
     }
+    public function orderInventoryUpdate($orderId,$status=false){
+        $products=OrderProduct::where('order_id',$orderId)->get();
+        foreach($products as $product){
+            $this->stockInventoryUpdate($product->stock_id,$product->quantity,$status);
+        }
+    }
+    public function stockInventoryUpdate($stockId,$qty,$status){
+        $stock=Stock::where('id',$stockId)->first();
+        if($stock){
+            try {
+                // true=addition, false=subtract
+                $data['boxQuantity']=$status?($stock->boxQuantity+$qty):($stock->boxQuantity-$qty);
+                $stock->update($data);
+                return true;
+            } catch (\Throwable $th) {
+                return false;
+            }
+        }
+        return false;
+    }
+
     public function all()
     {
         return 0;

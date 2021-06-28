@@ -74,6 +74,9 @@ class OrderAPIController extends Controller
         $order_data['mobile'] = $request->mobile;
         $order_data['address'] = $request->address;
         try {
+            if($request->status=='canceled'){
+                $this->orderInventoryUpdate($order->id,true);
+            }
             $newOrder=$order->update($order_data);
             return response()->json(['status'=>200,'message'=>"Order updated"]);
         } catch (\Throwable $th) {

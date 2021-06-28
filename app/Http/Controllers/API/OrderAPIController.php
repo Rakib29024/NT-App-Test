@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\InsertRequest;
 use App\Http\Requests\Order\UpdateRequest;
+use App\Repositories\OfferOrder\OfferOrderRepositoryInterface;
 use App\Repositories\Order\OrderRepositoryInterface;
 
 class OrderAPIController extends Controller
@@ -36,12 +37,12 @@ class OrderAPIController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(InsertRequest $request)
+    public function store(InsertRequest $request,OfferOrderRepositoryInterface $OfferOrderRepositoryInterface)
     {
 
         DB::beginTransaction();
         try {
-            $invoice=$this->Repository->create($request);
+            $invoice=$this->Repository->create($request,$OfferOrderRepositoryInterface);
             return response()->json(['message'=>'Thanks for ordering','invoice'=>$invoice]);
             DB::commit();
         } catch (\Throwable $th) {

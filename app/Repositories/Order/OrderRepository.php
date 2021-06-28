@@ -4,6 +4,7 @@ namespace App\Repositories\Order;
 use App\Models\Order;
 use App\Models\Stock;
 use App\Models\OrderProduct;
+use App\Repositories\OfferOrder\OfferOrderRepositoryInterface;
 use App\Repositories\Order\OrderRepositoryInterface;
 
 Class OrderRepository implements OrderRepositoryInterface
@@ -18,7 +19,7 @@ Class OrderRepository implements OrderRepositoryInterface
         return $this->Order->where('status','pending')->select($this->Order->dataFormat())->get();
     }
 
-    public function create($request)
+    public function create($request,$OfferOrder)
     {
         $order_data = $request->except('_token','_method','files','order_id','quantity','stock_id');
         $order_data['orderID']=rand(111111,9999999).date('ymdhmi');

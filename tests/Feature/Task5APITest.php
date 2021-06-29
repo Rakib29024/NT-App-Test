@@ -55,6 +55,7 @@ class Task5APITest extends TestCase
                 'relatedProducts'=>[
                     '*'=>[
                         'product_id',
+                        'product_name',
                         'weight',
                         'tasteType',
                         'pricePerBox',

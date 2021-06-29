@@ -49,6 +49,7 @@ class Task4APITest extends TestCase
                         '*'=>[
                             'productName',
                             'order_id',
+                            'discount',
                             'stock_id',
                             'totalProductPrice',
                             'deliveryCost'
@@ -68,7 +69,7 @@ class Task4APITest extends TestCase
             "mobile"=> $this->faker->phoneNumber,
             "address"=> $this->faker->randomElement(['chitagong', 'feni', 'dhaka']),
             "stock_id"=> [$stock->id,$stock->id],
-            "quantity"=> [$this->faker->randomElement([5, 3, 7, 10]),$this->faker->randomElement([5, 3, 7, 10])],
+            "quantity"=> [$this->faker->randomElement([5, 6, 7, 10]),$this->faker->randomElement([5, 3, 7, 10])],
             "preOrderCode"=>""
         ];
         $this->withoutExceptionHandling();
@@ -90,7 +91,12 @@ class Task4APITest extends TestCase
                             'order_id',
                             'stock_id',
                             'totalProductPrice',
-                            'deliveryCost'
+                            'deliveryCost',
+                            'preOrderToken'=>[
+                                'user_id',
+                                'preOrderCode',
+                                'expiry_date'
+                            ]
                         ]
                     ]
                 ]

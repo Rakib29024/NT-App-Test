@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Order extends Model
 {
     use HasFactory,SoftDeletes;
-    protected $fillable=['user_id','orderID','mobile','address','preOrder','status'];
+    protected $fillable=['user_id','orderID','mobile','address','status'];
 
     public function dataFormat(){
         return $this->fillable;

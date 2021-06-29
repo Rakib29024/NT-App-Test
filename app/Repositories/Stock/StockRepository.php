@@ -21,7 +21,7 @@ Class StockRepository extends CommonRepository implements StockRepositoryInterfa
             $requestedProducts=$products->whereIn('id',$stock_ids);
             $productWeight=$requestedProducts->pluck('weight');
             $productTasteType=$requestedProducts->pluck('tasteType');
-            return $products->whereIn('weight',$productWeight)->WhereIn('tasteType',$productTasteType)->get();
+            return $products->with('product_name:id,name')->whereIn('weight',$productWeight)->WhereIn('tasteType',$productTasteType)->get();
     }
 
 

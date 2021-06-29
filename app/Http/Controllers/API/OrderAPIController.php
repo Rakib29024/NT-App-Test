@@ -12,6 +12,7 @@ use App\Http\Requests\Order\InsertRequest;
 use App\Http\Requests\Order\UpdateRequest;
 use App\Repositories\OfferOrder\OfferOrderRepositoryInterface;
 use App\Repositories\Order\OrderRepositoryInterface;
+use App\Repositories\PreOrder\PreOrderRepositoryInterface;
 
 class OrderAPIController extends Controller
 {
@@ -76,7 +77,7 @@ class OrderAPIController extends Controller
         $order_data['address'] = $request->address;
         try {
             if($request->status=='canceled'){
-                $this->orderInventoryUpdate($order->id,true);
+                $this->Repository->orderInventoryUpdate($order->id,true);
             }
             $newOrder=$order->update($order_data);
             return response()->json(['status'=>200,'message'=>"Order updated"]);

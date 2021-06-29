@@ -19,6 +19,7 @@ class CreateOfferOrdersTable extends Migration
             $table->integer('total_product_price_min');
             $table->date('expiry_date');
             $table->integer('discount')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

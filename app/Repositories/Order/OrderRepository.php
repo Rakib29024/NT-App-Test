@@ -5,18 +5,14 @@ use App\Models\Order;
 use App\Models\Stock;
 use App\Models\OrderProduct;
 use App\Repositories\Order\OrderRepositoryInterface;
-use App\Repositories\PreOrder\PreOrderRepositoryInterface;
-use App\Repositories\OfferOrder\OfferOrderRepositoryInterface;
 
 Class OrderRepository implements OrderRepositoryInterface
 {
-    public $Order,$OfferOrderRepositoryInterface,$PreOrderRepositoryInterface;
+    public $Order;
 
-    public function __construct(Order $Order,OfferOrderRepositoryInterface $OfferOrderRepositoryInterface,PreOrderRepositoryInterface $PreOrderRepositoryInterface) {
+    public function __construct(Order $Order) {
         //parent::__construct($Order);
         $this->Order = $Order;
-        $this->OfferOrderRepositoryInterface = $OfferOrderRepositoryInterface;
-        $this->PreOrderRepositoryInterface = $PreOrderRepositoryInterface;
     }
     public function pendingOrders(){
         return $this->Order->where('status','pending')->select($this->Order->dataFormat())->get();
@@ -26,16 +22,17 @@ Class OrderRepository implements OrderRepositoryInterface
     {
         $order_data = $request->except('_token','_method','files','order_id','quantity','stock_id');
         $order_data['orderID']=rand(111111,9999999).date('ymdhmi');
-        $order=Order::Create($order_data);
+        $order=$this->Order->Create($order_data);
         $deliveryCost=preg_match("/(D|d)haka/",$request->address)?60:100;
         $invoice['orderInfo']=$order;
         $productInfo=[];
         for ($i=0;$i<count($request->stock_id);$i++) {
 
+            $preOrderCode=false;
             $stock=Stock::findOrFail($request->stock_id[$i]);
             $data['productName']=$stock->product_name->name;
             if($stock->boxQuantity<$request->stock_id[$i]){
-                $preOrderCode=$this->PreOrderRepositoryInterface->preOrderTokenCheck($request->preOrderCode);
+                $preOrderCode=$OfferOrder->preOrderTokenCheck($request->preOrderCode);
                 if(!$preOrderCode){
                     continue;
                 }
@@ -46,12 +43,13 @@ Class OrderRepository implements OrderRepositoryInterface
             $data['quantity']=$request->quantity[$i];
             $data['discount']=0;
             $totalProductAmount=($request->quantity[$i])*($stock->pricePerBox);
-            $discount=$this->OfferOrderRepositoryInterface->offerDiscount($request->quantity[$i],$totalProductAmount);
+            $discount=$OfferOrder->offerDiscount($request->quantity[$i],$totalProductAmount);
             $data['discount']=$discount;
             if($discount){
                 $totalProductAmount=$totalProductAmount-(($discount*$totalProductAmount)/100);
             }else{
-                $data['preOrderToken']=$this->PreOrderRepositoryInterface->createPreOrder();
+                if($totalProductAmount>1000 && $request->quantity[$i]>3)
+                $data['preOrderToken']=$OfferOrder->createPreOrder($request->user_id);
             }
             $data['totalProductPrice']=$totalProductAmount;
             $data['deliveryCost']=$deliveryCost;

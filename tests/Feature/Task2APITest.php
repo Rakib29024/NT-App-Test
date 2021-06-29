@@ -26,7 +26,7 @@ class Task2APITest extends TestCase
             "mobile"=> $this->faker->phoneNumber,
             "address"=> $this->faker->randomElement(['chitagong', 'feni', 'dhaka']),
             "stock_id"=> [$stock->id,$stock->id],
-            "quantity"=> [$this->faker->randomElement([5, 3, 7, 10]),$this->faker->randomElement([5, 3, 7, 10])],
+            "quantity"=> [$this->faker->randomElement([1, 2]),$this->faker->randomElement([1, 2])],
             "preOrderCode"=>""
         ];
         $this->withoutExceptionHandling();

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\OfferOrder;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Stock;
@@ -19,6 +20,7 @@ class Task4APITest extends TestCase
     {
         $user=User::factory()->create();
         $stock=Stock::factory()->create();
+        $offerOrder=OfferOrder::factory()->create();
         $formData=[
             "user_id"=> $user->id,
             "orderID"=> rand(111111,9999999).date('ymdhmi'),

@@ -21,4 +21,7 @@ class Stock extends Model
     {
         return $this->belongsTo(ProductName::class,'product_id');
     }
+    public function selectFormat(){
+        return $this->fillable;
+    }
 }

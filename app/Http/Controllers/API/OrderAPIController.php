@@ -13,6 +13,7 @@ use App\Http\Requests\Order\UpdateRequest;
 use App\Repositories\OfferOrder\OfferOrderRepositoryInterface;
 use App\Repositories\Order\OrderRepositoryInterface;
 use App\Repositories\PreOrder\PreOrderRepositoryInterface;
+use App\Repositories\Stock\StockRepositoryInterface;
 
 class OrderAPIController extends Controller
 {
@@ -38,13 +39,14 @@ class OrderAPIController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(InsertRequest $request,OfferOrderRepositoryInterface $OfferOrderRepositoryInterface)
+    public function store(InsertRequest $request,OfferOrderRepositoryInterface $OfferOrderRepositoryInterface,StockRepositoryInterface $StockRepositoryInterface)
     {
 
         DB::beginTransaction();
         try {
             $invoice=$this->Repository->create($request,$OfferOrderRepositoryInterface);
-            return response()->json(['message'=>'Thanks for ordering','invoice'=>$invoice]);
+            $relatedProducts=$StockRepositoryInterface->relatedProducts($request->stock_id);
+            return response()->json(['message'=>'Thanks for ordering','invoice'=>$invoice,'relatedProducts'=>$relatedProducts]);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
